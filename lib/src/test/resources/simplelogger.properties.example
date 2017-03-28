@@ -1,0 +1,2 @@
+#org.slf4j.simpleLogger.defaultLogLevel=debug
+#org.slf4j.simpleLogger.log.aoeiuv020.MinimumCostSpanningTree=debug
