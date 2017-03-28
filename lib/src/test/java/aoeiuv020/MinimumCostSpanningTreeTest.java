@@ -13,36 +13,39 @@ import static org.junit.Assert.*;
 public class MinimumCostSpanningTreeTest {
 	// 不可修改的用于测试时作为输入的图，
 	private static ImmutableValueGraph<Integer,Integer> valueGraph;
+	// 不可修改的用于测试时作为正确结果的图，同时是最小代价生成树，
+	private static ImmutableValueGraph<Integer,Integer> currectGraph;
 	static {
-		MutableValueGraph graph= ValueGraphBuilder
+		MutableValueGraph graph;
+		graph=ValueGraphBuilder
 			.undirected()
 			.allowsSelfLoops(false)
 			.build();
-		graph.putEdgeValue(0,1,6);
-		graph.putEdgeValue(0,3,5);
+
 		graph.putEdgeValue(0,2,1);
+		graph.putEdgeValue(5,2,4);
+		graph.putEdgeValue(3,5,2);
 		graph.putEdgeValue(1,2,5);
 		graph.putEdgeValue(1,4,3);
+		currectGraph=ImmutableValueGraph.copyOf(graph);
+
+		graph.putEdgeValue(0,1,6);
+		graph.putEdgeValue(0,3,5);
 		graph.putEdgeValue(2,4,6);
 		graph.putEdgeValue(5,4,6);
-		graph.putEdgeValue(5,2,4);
 		graph.putEdgeValue(3,2,5);
-		graph.putEdgeValue(3,5,2);
 		valueGraph=ImmutableValueGraph.copyOf(graph);
 	}
 	@Test
 	public void prim() throws Exception {
 		ValueGraph<Integer,Integer> resultGraph=MinimumCostSpanningTree.prim(valueGraph);
 		assertFalse(Graphs.hasCycle(resultGraph));
-		MutableValueGraph currectGraph= ValueGraphBuilder
-			.undirected()
-			.allowsSelfLoops(false)
-			.build();
-		currectGraph.putEdgeValue(0,2,1);
-		currectGraph.putEdgeValue(5,2,4);
-		currectGraph.putEdgeValue(3,5,2);
-		currectGraph.putEdgeValue(1,2,5);
-		currectGraph.putEdgeValue(1,4,3);
+		assertTrue(Graphs.equivalent(resultGraph,currectGraph));
+	}
+	@Test
+	public void kruskal() throws Exception {
+		ValueGraph<Integer,Integer> resultGraph=MinimumCostSpanningTree.kruskal(valueGraph);
+		assertFalse(Graphs.hasCycle(resultGraph));
 		assertTrue(Graphs.equivalent(resultGraph,currectGraph));
 	}
 }
