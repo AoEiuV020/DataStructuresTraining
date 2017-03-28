@@ -28,13 +28,13 @@ public class MinimumCostSpanningTree {
 			.treeKeys()
 			.linkedListValues()
 			.build();
-		Multiset<Integer> set=map.keys();
+		Multiset<Integer> keys=map.keys();
 		Collection<EndpointPair<N>> values=map.values();
 		//已经连上的结点，
 		Set<N> nodes=resultGraph.nodes();
 		N lastNode=graph.nodes().iterator().next();
-		// FIXME: 没判断是否连通，
-		for(int i=0;i<8&&nodes.size()<graph.nodes().size();++i)
+		// FIXME: graph不连通的话可能死循环，
+		while(nodes.size()<graph.nodes().size())
 		{
 			Set<N> aNodeSet=graph.adjacentNodes(lastNode);
 			// 新结点的所有边添加进map,保存边的权值和一条有向边指向lastNode和边的目的，
@@ -47,22 +47,24 @@ public class MinimumCostSpanningTree {
 					map.put(edgeValue,EndpointPair.ordered(lastNode,nextNode));
 				}
 			}
+			Iterator<EndpointPair<N>> iterator=values.iterator();
 			EndpointPair<N> nextEdge=null;
-			Integer nextEdgeWeight;
-			nextEdgeWeight=set.iterator().next();
-			Iterator<EndpointPair<N>> iterator;
-			iterator=values.iterator();
+			Integer nextEdgeWeight=null;
 			// 从保存的所有边里取出第一条权值最小的同时目的结点未被新图包含的边，
+			// FIXME: graph不连通的话找下一条边可能返回最后一条无效的边，同时nextEdgeWeight为空，
 			while(iterator.hasNext()){
 				nextEdge=iterator.next();
-				iterator.remove();
 				if(!nodes.contains(nextEdge.target())){
+					nextEdgeWeight=keys.iterator().next();
+					iterator.remove();
 					break;
+				}else{
+					iterator.remove();
 				}
 			}
 			resultGraph.putEdgeValue(nextEdge.source(),nextEdge.target(),nextEdgeWeight);
 			lastNode=nextEdge.target();
-			logger.debug("nextEdge {}",nextEdge);
+			logger.debug("nextEdge {} = {}",nextEdge,nextEdgeWeight);
 		}
 		logger.debug("resultGraph {}",resultGraph);
 		return resultGraph;
