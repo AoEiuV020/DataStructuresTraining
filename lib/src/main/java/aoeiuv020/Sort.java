@@ -39,14 +39,15 @@ public class Sort {
         }
         //顺序，
         ListIterator<E> asc = list.listIterator(start);
-        E next = asc.next();
+        E next;
         //倒序，
         ListIterator<E> desc = list.listIterator(end - 1);
         E previous = desc.previous();
         ListIterator<E> pivotIterator = list.listIterator(end);
         E pivot = pivotIterator.previous();
         logger.debug("quick sort <{},{},{}>", start, end, pivot);
-        while (asc.nextIndex() - 1 < desc.previousIndex() + 1) {
+        do {
+            next = asc.next();
             while (next.compareTo(pivot) <= 0 && asc.nextIndex() - 1 < desc.previousIndex() + 1) {
                 logger.trace("{} < {}", next, pivot);
                 next = asc.next();
@@ -58,11 +59,9 @@ public class Sort {
             logger.trace("swap <{},{}>", next, previous);
             asc.set(previous);
             desc.set(next);
-            E temp = next;
-            next = previous;
-            previous = temp;
+            previous = next;
             logger.debug("list {}", list);
-        }
+        } while (asc.nextIndex() - 1 < desc.previousIndex() + 1);
         logger.debug("{} compareTo {}", previous, pivot);
         int pivotIndex;
         if (previous.compareTo(pivot) >= 0) {
