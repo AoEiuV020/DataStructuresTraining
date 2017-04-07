@@ -11,13 +11,18 @@ import static org.junit.Assert.assertEquals;
  * 排序算法测试类，
  */
 public class SortTest {
-    private static final List<Integer> unsorted = Collections.unmodifiableList(
-            Arrays.asList(21, 34, 3, 32, 82, 55, 89, 50, 37, 5, 64, 35, 9, 70)
-    );
+    private static final List<Integer> unsorted;
     private static final List<Integer> sorted;
 
     static {
-        List<Integer> list = new ArrayList<>(unsorted);
+        int count = 20;
+        List<Integer> list = new ArrayList<>(count);
+        Random random = new Random(System.currentTimeMillis());
+        for (int i = 0; i < count; i++) {
+            list.add(random.nextInt() % 100);
+        }
+        unsorted = Collections.unmodifiableList(list);
+        list = new ArrayList<>(unsorted);
         list.sort(Integer::compare);
         sorted = Collections.unmodifiableList(list);
     }
