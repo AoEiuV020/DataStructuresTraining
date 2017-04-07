@@ -11,9 +11,15 @@ import java.util.ListIterator;
  * Created by AoEiuV020 on 2017/04/06.
  * 排序算法类，
  */
+@SuppressWarnings("unchecked")
 public class Sort {
     private static final Logger logger = LoggerFactory.getLogger(Sort.class);
 
+    /**
+     * 自己凭感觉写的quick sort算法，
+     * 好像符合定义，
+     * 因为强行使用List和Iterator导致代码很奇怪，
+     */
     public static <E extends Comparable> List<E> quickSort(List<E> unsortedList) {
         logger.debug("unsorted list: {}", unsortedList);
         List<E> sortedList = new ArrayList<>(unsortedList);
@@ -21,12 +27,6 @@ public class Sort {
         return sortedList;
     }
 
-    /**
-     * 自己凭感觉写的quick sort算法，
-     * 好像符合定义，
-     * 因为强行使用List和Iterator导致代码很奇怪，
-     */
-    @SuppressWarnings("unchecked")
     private static <E extends Comparable> void quickSort(List<E> list, int start, int end) {
         if (start >= end - 1) {
             return;
@@ -67,6 +67,45 @@ public class Sort {
         }
         quickSort(list, start, pivotIndex);
         quickSort(list, pivotIndex + 1, end);
+    }
+
+    /**
+     * 模仿Wiki上的quick sort示例代码，
+     * 强行使用List和Comparable,
+     * 原本用于数组，对应ArrayList,
+     * 否则效率极低，
+     */
+    public static <E extends Comparable> List<E> quickSortWiki(List<E> unsortedList) {
+        logger.debug("unsorted list: {}", unsortedList);
+        List<E> sortedList = new ArrayList<>(unsortedList);
+        quickSortWiki(sortedList, 0, sortedList.size() - 1);
+        return sortedList;
+    }
+
+    private static <E extends Comparable> void quickSortWiki(List<E> list, int start, int end) {
+        if (start >= end)
+            return;
+        E mid = list.get(end);
+        int left = start, right = end - 1;
+        while (left < right) {
+            while (list.get(left).compareTo(mid) <= 0 && left < right)
+                left++;
+            while (list.get(right).compareTo(mid) >= 0 && left < right)
+                right--;
+            swap(list, left, right);
+        }
+        if (list.get(left).compareTo(list.get(end)) >= 0)
+            swap(list, left, end);
+        else
+            left++;
+        quickSortWiki(list, start, left - 1);
+        quickSortWiki(list, left + 1, end);
+    }
+
+    private static <E> void swap(List<E> list, int from, int to) {
+        E temp = list.get(from);
+        list.set(from, list.get(to));
+        list.set(to, temp);
     }
 }
 

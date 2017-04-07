@@ -28,6 +28,11 @@ public class SortTest {
     }
 
     @Test
+    public void quickSortWiki() throws Exception {
+        assertEquals(sorted, Sort.quickSortWiki(unsorted));
+    }
+
+    @Test
     public void listIterator() throws Exception {
         ListIterator<Integer> listIterator = unsorted.listIterator(unsorted.size());
         int index = unsorted.size();
