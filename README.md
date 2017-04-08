@@ -1,4 +1,5 @@
 # 学习数据结构和算法
+[![](https://jitpack.io/v/AoEiuV020/DataStructuresTraining.svg)](https://jitpack.io/#AoEiuV020/DataStructuresTraining)
 
 ```sh
 cp lib/src/test/resources/simplelogger.properties{.example,}
