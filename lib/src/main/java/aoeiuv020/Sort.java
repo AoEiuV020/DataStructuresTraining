@@ -4,14 +4,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
 /**
- * Created by AoEiuV020 on 2017/04/06.
  * 排序算法类，
+ * Created by AoEiuV020 on 2017/04/06.
  */
-@SuppressWarnings("unchecked")
+@SuppressWarnings({"unchecked", "WeakerAccess"})
 public class Sort {
     private static final Logger logger = LoggerFactory.getLogger(Sort.class);
 
@@ -22,6 +23,7 @@ public class Sort {
      * 本意是用ListIterator减少get方法定位非{@link java.util.RandomAccess}的开销，
      * 然而意义不太大，对于{@link java.util.LinkedList},{@link List#listIterator()}本身也要开销，
      * 时间复杂度O(n),平均那什么次数(n/4),
+     * 而且我这里是new一个{@link ArrayList}，不直接用传入的List,
      */
     public static <E extends Comparable> List<E> quickSort(List<E> unsortedList) {
         logger.debug("unsorted list: {}", unsortedList);
@@ -119,6 +121,71 @@ public class Sort {
         E temp = list.get(from);
         list.set(from, list.get(to));
         list.set(to, temp);
+    }
+
+    /**
+     * 自己凭感觉写的插入排序，
+     * 应该是符合定义的，
+     */
+    public static <E extends Comparable> LinkedList<E> insertionSort(List<E> unsortedList) {
+        logger.debug("insertionSort list: {}", unsortedList);
+        LinkedList<E> sortedList = new LinkedList<>(unsortedList);
+        insertionSort(sortedList, 0, sortedList.size());
+        return sortedList;
+    }
+
+    /**
+     * @param end 最后一个元素的后一个，比如1-3是两个元素，
+     */
+    @SuppressWarnings("SameParameterValue")
+    public static <E extends Comparable> void insertionSort(List<E> list, int start, int end) {
+        LinkedList<E> sortedList = new LinkedList();
+        ListIterator<E> unsortedAsc = list.listIterator(start);
+        ListIterator<E> sortedIterator = sortedList.listIterator(start);
+        E unsortedNext = null;
+        boolean flag;
+        while (unsortedAsc.nextIndex() < end) {
+            E old = unsortedNext;
+            unsortedNext = unsortedAsc.next();
+            if (old == null || unsortedNext.compareTo(old) > 0) {
+                //后移找插入点，
+                flag = true;
+                while (sortedIterator.hasNext()) {
+                    E sortedNext = sortedIterator.next();
+                    if (sortedNext.compareTo(unsortedNext) >= 0) {
+                        sortedIterator.previous();
+                        sortedIterator.add(unsortedNext);
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    sortedIterator.add(unsortedNext);
+                }
+            } else {
+                //前移找插入点，
+                flag = true;
+                while (sortedIterator.hasPrevious()) {
+                    E sortedPrevious = sortedIterator.previous();
+                    if (sortedPrevious.compareTo(unsortedNext) <= 0) {
+                        sortedIterator.next();
+                        sortedIterator.add(unsortedNext);
+                        flag = false;
+                        break;
+                    }
+                }
+                if (flag) {
+                    sortedIterator.add(unsortedNext);
+                }
+            }
+            logger.debug("list {}", sortedList);
+        }
+        ListIterator<E> from = sortedList.listIterator();
+        ListIterator<E> to = list.listIterator(start);
+        while (from.hasNext()) {
+            to.next();
+            to.set(from.next());
+        }
     }
 }
 

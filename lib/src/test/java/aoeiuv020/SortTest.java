@@ -4,11 +4,11 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
- * Created by AoEiuV020 on 2017/04/06.
  * 排序算法测试类，
+ * Created by AoEiuV020 on 2017/04/06.
  */
 public class SortTest {
     private static final List<Integer> unsorted;
@@ -52,6 +52,43 @@ public class SortTest {
         Integer i = listIterator.next();
         listIterator.set(i + 1);
         assertEquals(list.get(0), new Integer(i + 1));
+        list = new LinkedList<>(sorted);
+        listIterator = list.listIterator(2);
+        assertEquals(2, listIterator.nextIndex());
+        assertEquals(1, listIterator.previousIndex());
+        listIterator.add(888);
+        assertEquals(3, listIterator.nextIndex());
+        assertEquals(2, listIterator.previousIndex());
+        assertEquals(new Integer(888), list.get(2));
+        listIterator.add(999);
+        assertEquals(4, listIterator.nextIndex());
+        assertEquals(3, listIterator.previousIndex());
+        assertEquals(new Integer(888), list.get(2));
+        assertEquals(new Integer(999), list.get(3));
+        ListIterator removeIterator = list.listIterator(4);
+        assertEquals(list.get(4), removeIterator.next());
+        listIterator = list.listIterator(0);
+        assertEquals(list.get(0), listIterator.next());
+        listIterator.previous();
+        listIterator.add(1111);
+        try {
+            removeIterator.remove();
+            fail();
+        } catch (ConcurrentModificationException ignored) {
+        }
+        assertEquals(list.get(1), listIterator.next());
+        listIterator = list.listIterator();
+        assertFalse(listIterator.hasPrevious());
+        listIterator = list.listIterator(8);
+        assertEquals(list.get(7), listIterator.previous());
+        listIterator.add(1234);
+        assertEquals(new Integer(1234), list.get(7));
+        assertEquals(new Integer(1234), listIterator.previous());
+    }
+
+    @Test
+    public void insertionSort() throws Exception {
+        assertEquals(sorted, Sort.insertionSort(unsorted));
     }
 }
 
