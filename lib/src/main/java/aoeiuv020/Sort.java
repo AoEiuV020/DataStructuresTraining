@@ -105,14 +105,15 @@ public class Sort {
             while (list.get(right).compareTo(mid) >= 0 && left < right)
                 right--;
             swap(list, left, right);
-            logger.debug("list {}", list);
         }
         logger.debug("{} compareTo {}", list.get(left), list.get(end));
         if (list.get(left).compareTo(list.get(end)) >= 0) {
             swap(list, left, end);
         } else {
+            //下一个只可能是mid，也就是没有大于mid的,不需要再交换，
             left++;
         }
+        logger.debug("list {}", list);
         quickSortWiki(list, start, left - 1);
         quickSortWiki(list, left + 1, end);
     }
