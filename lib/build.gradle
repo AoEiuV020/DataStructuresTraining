@@ -24,10 +24,21 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
+def linksList = new LinkedList<>();
+linksList.add "https://docs.oracle.com/javase/8/docs/api"
+linksList.add "https://google.github.io/guava/releases/21.0/api/docs/"
+// 这个javadoc.io不行，斜杠/结尾的链接返回302 moved, 可能是因为这个导致 Error fetching URL
+// configurations.implementation.dependencies.each {
+//     linksList.add "https://www.javadoc.io/doc/$it.group/$it.name/$it.version" as String
+// }
 tasks.withType(Javadoc) {
-    options.addStringOption('Xdoclint:none', '-quiet') //ignore all warnings,
-    options.addStringOption('encoding', 'UTF-8')
-    options.addStringOption('charSet', 'UTF-8')
+    options {
+        addStringOption('Xdoclint:none', '-quiet') //ignore all warnings,
+        encoding "utf-8"
+        docEncoding 'utf-8'
+        charSet 'utf-8'
+        links linksList.toArray([] as String[])
+    }
 }
 
 artifacts {
@@ -49,4 +60,3 @@ install {
         }
     }
 }
-
