@@ -24,7 +24,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-def linksList = new LinkedList<>();
+def linksList = new LinkedList<>()
 linksList.add "https://docs.oracle.com/javase/8/docs/api"
 linksList.add "https://google.github.io/guava/releases/21.0/api/docs/"
 // 这个javadoc.io不行，斜杠/结尾的链接返回302 moved, 可能是因为这个导致 Error fetching URL
@@ -52,6 +52,7 @@ install {
         pom.project {
             licenses {
                 license {
+                    //noinspection GroovyAssignabilityCheck
                     name 'The Apache Software License, Version 2.0'
                     url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                     distribution 'repo'
