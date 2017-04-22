@@ -142,7 +142,7 @@ public class Sort {
     public static <E extends Comparable> void insertionSort(List<E> list, int start, int end) {
         LinkedList<E> sortedList = new LinkedList();
         ListIterator<E> unsortedAsc = list.listIterator(start);
-        ListIterator<E> sortedIterator = sortedList.listIterator(start);
+        ListIterator<E> sortedIterator = sortedList.listIterator(0);
         E unsortedNext = null;
         boolean flag;
         while (unsortedAsc.nextIndex() < end) {
