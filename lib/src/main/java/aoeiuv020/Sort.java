@@ -188,5 +188,45 @@ public class Sort {
             to.set(from.next());
         }
     }
+    /**
+     * 自己凭感觉写的两路合并算法，
+     * 复杂度没算，
+     */
+    public static <E extends Comparable> List<E> mergeSort(List<E> unsortedList) {
+        List<E> sortedList=new ArrayList<>(unsortedList);
+        mergeSort(sortedList,0,sortedList.size());
+        return sortedList;
+    }
+    /**
+     * @param end 最后一个+1,
+     */
+    public static <E extends Comparable> void mergeSort(List<E> list,int start,int end){
+        if(end-start<=1){
+            return;
+        }
+        int mid=(start+end)/2;
+        mergeSort(list,start,mid);
+        mergeSort(list,mid,end);
+        merge(list,start,mid,end);
+        logger.debug("list <{},{},{}>",list,start,end);
+    }
+    /**
+      * start &lt; mid &lt; end
+      */
+    public static <E extends Comparable> void merge(List<E> list,int start,int mid,int end){
+        List<E> mergedList=new ArrayList<>(end-start);
+        int left=start,right=mid;
+        while(left<mid||right<end){
+            if(left<mid&&(right==end||list.get(left).compareTo(list.get(right))<=0)){
+                mergedList.add(list.get(left++));
+            }else{
+                mergedList.add(list.get(right++));
+            }
+        }
+        logger.trace("merged {}",mergedList);
+        for(int i=0;i<mergedList.size();++i){
+            list.set(start+i,mergedList.get(i));
+        }
+    }
 }
 

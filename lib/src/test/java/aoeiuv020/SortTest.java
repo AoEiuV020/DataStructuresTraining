@@ -90,5 +90,10 @@ public class SortTest {
     public void insertionSort() throws Exception {
         assertEquals(sorted, Sort.insertionSort(unsorted));
     }
+
+    @Test
+    public void mergeSort() throws Exception {
+        assertEquals(sorted, Sort.mergeSort(unsorted));
+    }
 }
 
